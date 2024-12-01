@@ -22,7 +22,7 @@ public abstract class StripeContext {
     public void setLookupKey() throws StripeException {
         System.out.println(this.lookupKey);
         Stripe.apiKey = this.privateKey;
-        Price resource = Price.retrieve("price_1QR1nqG3TGHQ3eAXA1e67AMo");
+        Price resource = Price.retrieve("price_1QRIRfG3TGHQ3eAX84Zcz8Qu");
         PriceUpdateParams params =
                 PriceUpdateParams.builder().setLookupKey(this.lookupKey).build();
         Price price = resource.update(params);

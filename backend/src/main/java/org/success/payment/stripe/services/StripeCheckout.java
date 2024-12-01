@@ -28,7 +28,7 @@ public class StripeCheckout extends StripeContext {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .addLineItem(
-                        SessionCreateParams.LineItem.builder().setPrice(prices.getData().get(0).getId()).build())
+                        SessionCreateParams.LineItem.builder().setPrice(prices.getData().get(0).getId()).setQuantity(1L).build())
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                 .setSuccessUrl(frontendUrl + "?success=true&session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(frontendUrl + "?canceled=true")
