@@ -1,4 +1,4 @@
-package org.example;
+package org.success.ipLooker;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -9,20 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.success.Main;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("/look_ip")
-public class Controller {
+public class IpLookerController {
 
     private DatabaseReader reader = new DatabaseReader.Builder(Main.class.getClassLoader().getResourceAsStream("GeoLite2-City.mmdb")).build();
 
-    public Controller() throws IOException {
+    public IpLookerController() throws IOException {
 
     }
 
