@@ -42,8 +42,13 @@ public class IpLookerController {
             System.out.println(response.getSubdivisions().get(0).getIsoCode());
             return ResponseEntity.ok().body(
                     new LocationResponse(
+                            response.getTraits().getIpAddress(),
+                            response.getContinent().getCode(),
+                            response.getCountry().getIsoCode(),
                             response.getSubdivisions().get(0).getIsoCode(),
                             response.getCity().getName(),
+                            response.getLocation().getTimeZone(),
+                            response.getPostal().getCode(),
                             response.getLocation().getLatitude(),
                             response.getLocation().getLongitude())
             );
