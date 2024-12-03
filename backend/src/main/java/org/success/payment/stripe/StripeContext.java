@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 public abstract class StripeContext {
 
+    protected String frontendUrl;
+
     protected String publicKey;
 
     protected String privateKey;
@@ -18,6 +20,9 @@ public abstract class StripeContext {
 
     @Value("${app.on-production}")
     private Boolean onProduction;
+
+    @Value("${app.dev.frontend-url}")
+    private String devFrontendUrl;
 
     @Value("${stripe.dev.public-key}")
     private String devPublicKey;
@@ -28,6 +33,9 @@ public abstract class StripeContext {
     @Value("${stripe.dev.lookup-key}")
     private String devLookupKey;
 
+    @Value("${app.prod.frontend-url}")
+    private String prodFrontendUrl;
+
     @Value("${stripe.prod.public-key}")
     private String prodPublicKey;
 
@@ -36,7 +44,6 @@ public abstract class StripeContext {
 
     @Value("${stripe.prod.lookup-key}")
     private String prodLookupKey;
-
 
     @PostConstruct
     public void setLookupKey() throws StripeException {
@@ -51,10 +58,12 @@ public abstract class StripeContext {
 
     private void getContext(){
         if(onProduction){
+            this.frontendUrl = this.prodFrontendUrl;
             this.publicKey = this.prodPublicKey;
             this.privateKey = this.prodPrivateKey;
             this.lookupKey = this.prodLookupKey;
         }else{
+            this.frontendUrl = this.devFrontendUrl;
             this.publicKey = this.devPublicKey;
             this.privateKey = this.devPrivateKey;
             this.lookupKey = this.devLookupKey;

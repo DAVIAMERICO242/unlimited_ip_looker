@@ -18,9 +18,6 @@ import org.success.payment.stripe.StripeContext;
 @Service
 public class StripeCheckout extends StripeContext {
 
-    @Value("${frontend-url}")
-    private String frontendUrl;
-
     public CheckoutRedirect createCheckoutSession() throws StripeException {//returns checkout URL
         PriceListParams priceParams =
                 PriceListParams.builder().addLookupKey(this.lookupKey).build();
