@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 public abstract class StripeContext {
 
+    @Value("${app.frontend-url}")
     protected String frontendUrl;
 
     protected String publicKey;
@@ -18,11 +19,10 @@ public abstract class StripeContext {
 
     protected String lookupKey;
 
+    protected String priceId;
+
     @Value("${app.on-production}")
     private Boolean onProduction;
-
-    @Value("${app.dev.frontend-url}")
-    private String devFrontendUrl;
 
     @Value("${stripe.dev.public-key}")
     private String devPublicKey;
@@ -33,8 +33,8 @@ public abstract class StripeContext {
     @Value("${stripe.dev.lookup-key}")
     private String devLookupKey;
 
-    @Value("${app.prod.frontend-url}")
-    private String prodFrontendUrl;
+    @Value("${stripe.dev.price-id}")
+    private String devPriceId;
 
     @Value("${stripe.prod.public-key}")
     private String prodPublicKey;
@@ -45,28 +45,31 @@ public abstract class StripeContext {
     @Value("${stripe.prod.lookup-key}")
     private String prodLookupKey;
 
+    @Value("${stripe.prod.price-id}")
+    private String prodPriceId;
+
     @PostConstruct
-    public void setLookupKey() throws StripeException {
-        getContext();
+    public void setLookupKeyOnStripeServer() throws StripeException {
+        configureEnviroment();
         System.out.println(this.lookupKey);
         Stripe.apiKey = this.privateKey;
-        Price resource = Price.retrieve("price_1QRIRfG3TGHQ3eAX84Zcz8Qu");
+        Price resource = Price.retrieve(this.priceId);
         PriceUpdateParams params =
                 PriceUpdateParams.builder().setLookupKey(this.lookupKey).build();
         Price price = resource.update(params);
     }
 
-    private void getContext(){
+    private void configureEnviroment(){
         if(onProduction){
-            this.frontendUrl = this.prodFrontendUrl;
             this.publicKey = this.prodPublicKey;
             this.privateKey = this.prodPrivateKey;
             this.lookupKey = this.prodLookupKey;
+            this.priceId = this.prodPriceId;
         }else{
-            this.frontendUrl = this.devFrontendUrl;
             this.publicKey = this.devPublicKey;
             this.privateKey = this.devPrivateKey;
             this.lookupKey = this.devLookupKey;
+            this.priceId = this.devPriceId;
         }
     }
 }
