@@ -16,7 +16,7 @@ public class StripeWebhooks extends StripeContext {
     @Async
     public void processWebhook(Event event){
         try{
-            event.setApiVersion(Stripe.API_VERSION);
+            event.setApiVersion(Stripe.API_VERSION);//versão la no painel
             StripeObject object = this.getAbstractStripeObject(event);
             if(event.getType().equals("checkout.session.completed")){//cobrança realizada com sucesso
                 Session checkout = (Session) object;
