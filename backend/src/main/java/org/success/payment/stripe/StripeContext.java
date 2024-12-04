@@ -21,6 +21,8 @@ public abstract class StripeContext {
 
     protected String priceId;
 
+    protected String webhookSecret;
+
     @Value("${app.on-production}")
     private Boolean onProduction;
 
@@ -36,6 +38,9 @@ public abstract class StripeContext {
     @Value("${stripe.dev.price-id}")
     private String devPriceId;
 
+    @Value("${stripe.dev.webhook-secret}")
+    private String devWebhookSecret;
+
     @Value("${stripe.prod.public-key}")
     private String prodPublicKey;
 
@@ -47,6 +52,9 @@ public abstract class StripeContext {
 
     @Value("${stripe.prod.price-id}")
     private String prodPriceId;
+
+    @Value("${stripe.prod.webhook-secret}")
+    private String prodWebhookSecret;
 
     @PostConstruct
     public void setLookupKeyOnStripeServer() throws StripeException {
@@ -65,11 +73,13 @@ public abstract class StripeContext {
             this.privateKey = this.prodPrivateKey;
             this.lookupKey = this.prodLookupKey;
             this.priceId = this.prodPriceId;
+            this.webhookSecret = this.prodWebhookSecret;
         }else{
             this.publicKey = this.devPublicKey;
             this.privateKey = this.devPrivateKey;
             this.lookupKey = this.devLookupKey;
             this.priceId = this.devPriceId;
+            this.webhookSecret = this.devWebhookSecret;
         }
     }
 }

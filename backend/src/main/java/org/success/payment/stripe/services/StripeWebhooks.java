@@ -6,16 +6,21 @@ import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.ApiResource;
+import com.stripe.net.Webhook;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.success.payment.stripe.StripeContext;
+
+import java.util.Optional;
 
 @Service
 public class StripeWebhooks extends StripeContext {
 
     @Async
-    public void processWebhook(Event event){
+    public void processWebhook(String rawBody, String stripeSignature){
         try{
+            Event event = Webhook.constructEvent(rawBody,stripeSignature,this.webhookSecret);
             event.setApiVersion(Stripe.API_VERSION);//versão la no painel
             StripeObject object = this.getAbstractStripeObject(event);
             if(event.getType().equals("checkout.session.completed")){//cobrança realizada com sucesso
