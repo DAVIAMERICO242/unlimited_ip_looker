@@ -32,17 +32,17 @@ public class StripeWebhooks extends StripeContext {
                 Charge charge = (Charge) object;
                 System.out.println(charge);
             }
-            if(event.getType().equals("customer.subscription.paused")){//nao assina mais
-                Customer customer = (Customer) object;
-                System.out.println(customer);
-            }
-            if(event.getType().equals("customer.subscription.resumed")){//voltou a assinar
-                Customer customer = (Customer) object;
-                System.out.println(customer);
-            }
-            if(event.getType().equals("customer.subscription.deleted")){//nao assina mais
-                Customer customer = (Customer) object;
-                System.out.println(customer);
+//            if(event.getType().equals("customer.subscription.paused")){//provavelmente é tirgado 1 mes depois de cancelar
+//                Subscription subscription = (Subscription) object;
+//                System.out.println(subscription);
+//            }
+//            if(event.getType().equals("customer.subscription.resumed")){//provavelmente é tirgado 1 mes depois de cancelar
+//                Subscription subscription = (Subscription) object;
+//                System.out.println(subscription);
+//            }
+            if(event.getType().equals("customer.subscription.deleted")){//é trigado quando a assinatura é cancelada (SEMPRE NO PERIODO DO FATURAMENTO)
+                Subscription subscription = (Subscription) object;
+                System.out.println(subscription);
             }
         }catch (Exception e){
             System.out.println("ERRO AO PROCESSAR WEBHOOK");
