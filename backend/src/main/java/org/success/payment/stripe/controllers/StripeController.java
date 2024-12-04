@@ -6,12 +6,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.success.payment.stripe.StripeContext;
 import org.success.payment.stripe.services.StripeCheckout;
+import org.success.payment.stripe.services.StripeCustomerPortal;
 import org.success.payment.stripe.services.StripeWebhooks;
 
 @RestController
@@ -23,6 +21,9 @@ public class StripeController extends StripeContext {
 
     @Autowired
     private StripeWebhooks stripeWebhooks;
+
+    @Autowired
+    private StripeCustomerPortal stripeCustomerPortal;
 
     @PostMapping("/create-checkout-session")
     public ResponseEntity createCheckout(){
@@ -39,6 +40,15 @@ public class StripeController extends StripeContext {
             String signature = request.getHeader("Stripe-Signature");
             stripeWebhooks.processWebhook(eventUnserialized,signature);
             return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(e.getLocalizedMessage());
+        }
+    }
+
+    @PostMapping("/portal")
+    public ResponseEntity createCustomerPortal(@RequestParam String customerId){
+        try{
+            return ResponseEntity.ok().body(stripeCustomerPortal.createShortLivedPortal(customerId));
         }catch (Exception e){
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }

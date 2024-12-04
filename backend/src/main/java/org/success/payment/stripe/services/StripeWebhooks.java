@@ -1,10 +1,7 @@
 package org.success.payment.stripe.services;
 
 import com.stripe.Stripe;
-import com.stripe.model.Charge;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.StripeObject;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.ApiResource;
 import com.stripe.net.Webhook;
@@ -23,13 +20,29 @@ public class StripeWebhooks extends StripeContext {
             Event event = Webhook.constructEvent(rawBody,stripeSignature,this.webhookSecret);
             event.setApiVersion(Stripe.API_VERSION);//versão la no painel
             StripeObject object = this.getAbstractStripeObject(event);
-            if(event.getType().equals("checkout.session.completed")){//cobrança realizada com sucesso
+            if(event.getType().equals("checkout.session.completed")){//assinou o plano
                 Session checkout = (Session) object;
                 System.out.println(checkout);
             }
-            if(event.getType().equals("charge.succeeded")){//cobrança realizada com sucesso
+            if(event.getType().equals("charge.succeeded")){//cobrança realizada com sucesso, implementar key ativa aqui, mas não enviar email
                 Charge charge = (Charge) object;
                 System.out.println(charge);
+            }
+            if(event.getType().equals("charge.failed")){//cobrança falhou
+                Charge charge = (Charge) object;
+                System.out.println(charge);
+            }
+            if(event.getType().equals("customer.subscription.paused")){//nao assina mais
+                Customer customer = (Customer) object;
+                System.out.println(customer);
+            }
+            if(event.getType().equals("customer.subscription.resumed")){//voltou a assinar
+                Customer customer = (Customer) object;
+                System.out.println(customer);
+            }
+            if(event.getType().equals("customer.subscription.deleted")){//nao assina mais
+                Customer customer = (Customer) object;
+                System.out.println(customer);
             }
         }catch (Exception e){
             System.out.println("ERRO AO PROCESSAR WEBHOOK");
