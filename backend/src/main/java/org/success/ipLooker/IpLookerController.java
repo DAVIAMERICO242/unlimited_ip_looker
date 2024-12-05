@@ -83,7 +83,7 @@ public class IpLookerController {
                             result.getCountryLong(),
                             result.getRegion(),
                             result.getCity(),
-                            result.getTimeZone(),
+                            result.getTimeZone()+"UTC",
                             result.getZipCode(),
                             (double) result.getLatitude(),
                             (double) result.getLongitude()
