@@ -73,9 +73,17 @@ public class IpLookerController {
     @GetMapping("/v2")
     public ResponseEntity getLocation2(@RequestParam(required = false) String ip, Boolean from_me, HttpServletRequest request) throws IOException, GeoIp2Exception {
         try{
+            String used_ip = ip;
+            if(from_me!=null && from_me){//não funciona localmente, apenas em produção
+                if(request.getHeader("X-FORWARDED-FOR")!=null && !request.getHeader("X-FORWARDED-FOR").isBlank()){
+                    used_ip = request.getHeader("X-FORWARDED-FOR");
+                }else{
+                    used_ip = request.getRemoteAddr();
+                }
+            }
             IP2Location builder = new IP2Location();
             builder.Open(Paths.get(file.toUri()).toString());
-            IPResult result = builder.IPQuery("2804:3230:80:3b00:9c1d:d306:5440:4f9c");
+            IPResult result = builder.IPQuery(used_ip);
             builder.Close();
             return ResponseEntity.ok().body(
                     new LocationResponse(
