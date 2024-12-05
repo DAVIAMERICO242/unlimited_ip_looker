@@ -87,7 +87,7 @@ public class IpLookerController {
             builder.Close();
             return ResponseEntity.ok().body(
                     new LocationResponse(
-                            "2804:3230:80:3b00:9c1d:d306:5440:4f9c",
+                            used_ip,
                             result.getCountryLong(),
                             result.getRegion(),
                             result.getCity(),
