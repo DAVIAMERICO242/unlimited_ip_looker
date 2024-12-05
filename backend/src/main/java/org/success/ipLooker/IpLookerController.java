@@ -56,7 +56,6 @@ public class IpLookerController {
             return ResponseEntity.ok().body(
                     new LocationResponse(
                             response.getTraits().getIpAddress(),
-                            response.getContinent().getCode(),
                             response.getCountry().getIsoCode(),
                             response.getSubdivisions().get(0).getIsoCode(),
                             response.getCity().getName(),
@@ -81,7 +80,6 @@ public class IpLookerController {
             return ResponseEntity.ok().body(
                     new LocationResponse(
                             "2804:3230:80:3b00:9c1d:d306:5440:4f9c",
-                    null,
                             result.getCountryLong(),
                             result.getRegion(),
                             result.getCity(),

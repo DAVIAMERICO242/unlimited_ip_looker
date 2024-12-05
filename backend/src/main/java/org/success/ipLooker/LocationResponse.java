@@ -7,9 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class LocationResponse {
     String ip_adress;
-    String continent_code;
     String country_code;
-    String region_code;
+    String region;
     String city;
     String time_zone;
     String postal_code;
