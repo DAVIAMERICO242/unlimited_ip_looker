@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LocationResponse {
-    String ip_adress;
+    String ip_address;
     String country;
     String state;
     String city;
