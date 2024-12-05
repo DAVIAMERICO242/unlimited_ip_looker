@@ -8,7 +8,7 @@ import lombok.Data;
 public class LocationResponse {
     String ip_adress;
     String country_code;
-    String region;
+    String state;
     String city;
     String time_zone;
     String postal_code;
