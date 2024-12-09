@@ -59,13 +59,10 @@ public class SubscriptionPaypalProcessor extends SubscriptionContext {
         }
         Customer customer = customerOPT.get();
         if(!paypalCustomerId.equals(customer.getPaypalCustomer().getPaypalId())){//problematico,
-            String oldId = customer.getPaypalCustomer().getAssociationId();
-            PaypalCustomer paypalCustomer = new PaypalCustomer();
+            PaypalCustomer paypalCustomer = customer.getPaypalCustomer();
             paypalCustomer.setPaypalId(paypalCustomerId);
-            PaypalCustomer saved = paypalCustomerRepository.save(paypalCustomer);
-            customer.setPaypalCustomer(saved);
+            customer.setPaypalCustomer(paypalCustomer);
             customerRepository.save(customer);
-            paypalCustomerRepository.deleteById(oldId);
         }
         customer.setTokenActive(true);
         customer.setLastPayment(LocalDateTime.now());
