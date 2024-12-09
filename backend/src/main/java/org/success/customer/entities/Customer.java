@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.success.payment.paypal.entities.PaypalCustomer;
 import org.success.payment.stripe.entities.StripeCustomer;
 import org.success.user.entities.User;
 
@@ -32,4 +33,8 @@ public class Customer {
     @JsonManagedReference
     @EqualsAndHashCode.Exclude
     private StripeCustomer stripeCustomer;
+    @OneToOne(mappedBy = "systemCustomer")
+    @JsonManagedReference
+    @EqualsAndHashCode.Exclude
+    private PaypalCustomer paypalCustomer;
 }

@@ -38,4 +38,8 @@ public class UserService {
         }
         return password.toString();
     }
+
+    public Boolean doesThisUsernameExist(String username){
+        return userRepository.findByUsername(username).isPresent();
+    }
 }

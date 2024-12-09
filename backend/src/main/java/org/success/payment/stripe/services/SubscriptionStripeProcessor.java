@@ -1,24 +1,20 @@
-package org.success.payment.processor;
+package org.success.payment.stripe.services;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.success.customer.entities.Customer;
-import org.success.customer.repositories.CustomerRepository;
-import org.success.ipLooker.IpLookerKeyService;
+import org.success.payment.SubscriptionContext;
 import org.success.payment.stripe.entities.StripeCustomer;
-import org.success.payment.stripe.repositories.StripeCustomerRepository;
 import org.success.user.DTOs.CreatedUserWithRandomPass;
-import org.success.user.services.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class SubscriptionProcessor extends SubscriptionContext {
+public class SubscriptionStripeProcessor extends SubscriptionContext {
 
     @Transactional
-    public void processStripeAfterCheckout(String stripeCustomerId,String name,String email,String phone){//como eu posso gerar o checkout a partir do stripe customerId nao é um problema
+    public void processAfterCheckout(String stripeCustomerId,String name,String email,String phone){//como eu posso gerar o checkout a partir do stripe customerId nao é um problema
         try{
             Optional<Customer> customerOPT = customerRepository.findByStripeId(stripeCustomerId);
             if(customerOPT.isEmpty()){//ativar plano primeira vez

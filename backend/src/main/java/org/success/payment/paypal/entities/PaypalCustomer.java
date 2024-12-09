@@ -1,4 +1,4 @@
-package org.success.payment.stripe.entities;
+package org.success.payment.paypal.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -9,13 +9,13 @@ import org.success.customer.entities.Customer;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="stripe_customers")
+@Table(name="paypal_customers")
 @Data
-public class StripeCustomer {
+public class PaypalCustomer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String associationId;
-    private String stripeId;
+    private String paypalId;
     @OneToOne
     @JoinColumn(name="system_customer_id")
     @JsonBackReference

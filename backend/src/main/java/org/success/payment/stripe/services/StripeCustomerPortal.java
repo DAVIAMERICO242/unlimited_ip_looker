@@ -11,11 +11,11 @@ import org.success.payment.stripe.StripeContext;
 @Service
 public class StripeCustomerPortal extends StripeContext {
 
-    public PortalRedirect createShortLivedPortal(String customerId) throws StripeException {
+    public PortalRedirect createShortLivedPortal(String stripeCustomerId) throws StripeException {
         Stripe.apiKey = this.privateKey;
         SessionCreateParams params =
                 SessionCreateParams.builder()
-                        .setCustomer(customerId)
+                        .setCustomer(stripeCustomerId)
                         .setReturnUrl(this.frontendUrl + "/account")
                         .build();
         Session session = Session.create(params);

@@ -46,9 +46,9 @@ public class StripeController extends StripeContext {
     }
 
     @PostMapping("/portal")
-    public ResponseEntity createCustomerPortal(@RequestParam String customerId){
+    public ResponseEntity createCustomerPortal(@RequestParam String stripe_customer_id){
         try{
-            return ResponseEntity.ok().body(stripeCustomerPortal.createShortLivedPortal(customerId));
+            return ResponseEntity.ok().body(stripeCustomerPortal.createShortLivedPortal(stripe_customer_id));
         }catch (Exception e){
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }
