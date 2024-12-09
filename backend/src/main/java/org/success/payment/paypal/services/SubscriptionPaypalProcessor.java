@@ -18,6 +18,10 @@ public class SubscriptionPaypalProcessor extends SubscriptionContext {
 
     @Transactional
     public void processAfterCheckout(String paypalCustomerId, String name, String email){//se esse email é diferente do login, o usuario tera outra conta
+        if(paypalCustomerId==null){
+            System.out.println();
+            throw new RuntimeException("PAYPAL PAYER ID NULL");
+        }
         try{
             if(!userService.doesThisUsernameExist(email)){//ativar plano primeira vez
                 this.activePlanFirstTime(paypalCustomerId,name,email);
