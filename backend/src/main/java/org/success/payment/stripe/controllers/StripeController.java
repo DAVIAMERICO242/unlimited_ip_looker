@@ -25,7 +25,7 @@ public class StripeController extends StripeContext {
     @Autowired
     private StripeCustomerPortal stripeCustomerPortal;
 
-    @PostMapping("/create-checkout-session")
+    @PostMapping("/checkout")
     public ResponseEntity createCheckout(){
         try{
             return ResponseEntity.ok().body(stripeCheckout.createCheckoutSession());

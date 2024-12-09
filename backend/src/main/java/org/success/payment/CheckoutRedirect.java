@@ -1,10 +1,10 @@
-package org.success.payment.stripe.DTOs;
+package org.success.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PortalRedirect {
+public class CheckoutRedirect {
     private String url;
 }

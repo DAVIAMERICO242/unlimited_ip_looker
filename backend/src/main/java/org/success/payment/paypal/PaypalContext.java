@@ -2,10 +2,18 @@ package org.success.payment.paypal;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import java.util.Base64;
 
 public abstract class PaypalContext {
     @Value("${app.on-production}")
     private Boolean onProduction;
+
+    @Value("${app.frontend-url}")
+    protected String frontendUrl;
+    protected HttpHeaders authorizedHeaders;
 
     protected String URL;
     protected String clientID;
@@ -49,6 +57,9 @@ public abstract class PaypalContext {
             this.productID = this.prodProductID;
             this.recurringPlanID = this.prodRecurringPlanID;
             this.webhookID = this.prodWebhookID;
+            String basicAuth = Base64.getEncoder().encodeToString((this.devClientID + ":" + this.devSecretKey).getBytes());
+            authorizedHeaders.set("Authorization", "Basic " + basicAuth);
+            authorizedHeaders.setContentType(MediaType.APPLICATION_JSON);
         }else{
             this.URL = this.devURL;
             this.clientID = this.devClientID;
@@ -56,6 +67,9 @@ public abstract class PaypalContext {
             this.productID = this.devProductID;
             this.recurringPlanID = this.devRecurringPlanID;
             this.webhookID = this.devWebhookID;
+            String basicAuth = Base64.getEncoder().encodeToString((this.prodClientID + ":" + this.prodSecretKey).getBytes());
+            authorizedHeaders.set("Authorization", "Basic " + basicAuth);
+            authorizedHeaders.setContentType(MediaType.APPLICATION_JSON);
         }
     }
 

@@ -5,7 +5,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.billingportal.Session;
 import com.stripe.param.billingportal.SessionCreateParams;
 import org.springframework.stereotype.Service;
-import org.success.payment.stripe.DTOs.PortalRedirect;
+import org.success.payment.PortalRedirect;
 import org.success.payment.stripe.StripeContext;
 
 @Service

@@ -30,14 +30,8 @@ public class PaypalWebhookVerificationService extends PaypalContext {
         payload.setWebhook_id(this.webhookID);
         payload.setWebhook_event(body);
 
-        // Set up HTTP headers
-        HttpHeaders httpHeaders = new HttpHeaders();
-        String basicAuth = Base64.getEncoder().encodeToString((this.clientID + ":" + this.secretKey).getBytes());
-        httpHeaders.set("Authorization", "Basic " + basicAuth);
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
         // Create the HTTP entity
-        HttpEntity httpEntity = new HttpEntity<>(payload, httpHeaders);
+        HttpEntity httpEntity = new HttpEntity<>(payload, this.authorizedHeaders);
 
         // Call PayPal's verification endpoint
         RestTemplate restTemplate = new RestTemplate();

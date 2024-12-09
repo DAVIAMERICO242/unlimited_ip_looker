@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.success.payment.paypal.DTOs.IncomingWebhook;
+import org.success.payment.paypal.services.PaypalCheckout;
 import org.success.payment.paypal.services.PaypalWebhookVerificationService;
 import org.success.payment.paypal.services.PaypalWebhooks;
 
@@ -21,6 +22,9 @@ public class PaypalController {
 
     @Autowired
     private PaypalWebhookVerificationService paypalWebhookVerificationService;
+
+    @Autowired
+    private PaypalCheckout paypalCheckout;
 
     @PostMapping("/webhook")
     public ResponseEntity webhook(@RequestBody IncomingWebhook payload, HttpServletRequest request){//se for subscription activated o email que vai chegar aqui é o do checkout
@@ -35,4 +39,14 @@ public class PaypalController {
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }
     }
+
+    @PostMapping("/checkout")
+    public ResponseEntity checkout(){//se for subscription activated o email que vai chegar aqui é o do checkout
+        try{
+            return ResponseEntity.ok().body(paypalCheckout.createCheckout());
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(e.getLocalizedMessage());
+        }
+    }
+
 }
