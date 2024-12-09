@@ -5,7 +5,6 @@ import com.ip2location.IPResult;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +32,6 @@ public class IpLookerController {
     private DatabaseReader reader = new DatabaseReader.Builder(Main.class.getClassLoader().getResourceAsStream("GeoLite2-City.mmdb")).build();
 
     public IpLookerController() throws IOException {
-    }
-
-    @PostConstruct
-    public void IpLooker() throws IOException {
         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("IP2LOCATION-LITE-DB11.IPV6.BIN");
         file = Files.createTempFile(null, ".BIN");
         Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);

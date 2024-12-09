@@ -5,14 +5,19 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.ApiResource;
 import com.stripe.net.Webhook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.success.payment.processor.PaymentProcessor;
 import org.success.payment.stripe.StripeContext;
 
 import java.util.Optional;
 
 @Service
 public class StripeWebhooks extends StripeContext {
+
+    @Autowired
+    private PaymentProcessor paymentProcessor;
 
     @Async
     public void processWebhook(String rawBody, String stripeSignature){
@@ -22,6 +27,12 @@ public class StripeWebhooks extends StripeContext {
             StripeObject object = this.getAbstractStripeObject(event);
             if(event.getType().equals("checkout.session.completed")){//assinou o plano
                 Session checkout = (Session) object;
+                paymentProcessor.processStripeAfterCheckout(
+                        checkout.getCustomer(),
+                        checkout.getCustomerDetails().getName(),
+                        checkout.getCustomerDetails().getEmail(),
+                        checkout.getCustomerDetails().getPhone()
+                );
                 System.out.println(checkout);
             }
             if(event.getType().equals("charge.succeeded")){//cobrança realizada com sucesso, implementar key ativa aqui, mas não enviar email
