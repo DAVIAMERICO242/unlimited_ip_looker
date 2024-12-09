@@ -14,7 +14,7 @@ import org.success.user.services.UserService;
 import java.time.LocalDateTime;
 
 @Service
-public class PaymentProcessor extends PaymentContext {
+public class SubscriptionProcessor extends SubscriptionContext {
 
     @Transactional
     public void processStripeAfterCheckout(String stripeCustomerId, String name,String email,String phone){

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 public abstract class StripeContext {
+    @Value("${app.on-production}")
+    private Boolean onProduction;
 
     @Value("${app.frontend-url}")
     protected String frontendUrl;
@@ -22,9 +24,6 @@ public abstract class StripeContext {
     protected String priceId;
 
     protected String webhookSecret;
-
-    @Value("${app.on-production}")
-    private Boolean onProduction;
 
     @Value("${stripe.dev.public-key}")
     private String devPublicKey;

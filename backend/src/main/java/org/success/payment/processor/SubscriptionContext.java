@@ -6,7 +6,7 @@ import org.success.ipLooker.IpLookerKeyService;
 import org.success.payment.stripe.repositories.StripeCustomerRepository;
 import org.success.user.services.UserService;
 
-public abstract class PaymentContext {
+public abstract class SubscriptionContext {
     @Autowired
     protected UserService userService;
 
