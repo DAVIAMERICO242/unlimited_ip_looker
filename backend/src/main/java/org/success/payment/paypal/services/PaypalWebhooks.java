@@ -19,7 +19,7 @@ public class PaypalWebhooks extends PaypalContext {
             Object subscriptionDataUnserialized = payload.getResource();
             IncomingWebhook.SubscriptionResource subscriptionData = getSerializedSubscriptionResource(subscriptionDataUnserialized);
             this.subscriptionPaypalProcessor.processAfterCheckout(
-                    payload.getCustom_id(),
+                    subscriptionData.getCustom_id(),
                     subscriptionData.getSubscriber().getPayer_id(),
                     subscriptionData.getSubscriber().getName().getGiven_name() + " " + subscriptionData.getSubscriber().getName().getSurname()
             );
