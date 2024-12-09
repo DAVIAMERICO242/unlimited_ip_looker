@@ -1,5 +1,6 @@
 package org.success.payment.paypal.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,16 @@ import java.util.Base64;
 import java.util.Map;
 
 @Service
-public class PayPalWebhookVerificationService extends PaypalContext {
+public class PaypalWebhookVerificationService extends PaypalContext {
 
-    public Boolean isVerifiedWebhook(Map<String, String> headers, IncomingWebhook body) {
+    public Boolean isVerifiedWebhook(HttpServletRequest request, IncomingWebhook body) {
         String verifyUrl = this.URL + "/v1/notifications/verify-webhook-signature";
         WebhookSignatureRequest payload = new WebhookSignatureRequest();
-        payload.setAuth_algo(headers.get("paypal-auth-algo"));
-        payload.setCert_url(headers.get("paypal-cert-url"));
-        payload.setTransmission_id(headers.get("paypal-transmission-id"));
-        payload.setTransmission_sig(headers.get("paypal-transmission-sig"));
-        payload.setTransmission_time(ZonedDateTime.parse(headers.get("paypal-transmission-time")).toLocalDateTime());
+        payload.setAuth_algo(request.getHeader("paypal-auth-algo"));
+        payload.setCert_url(request.getHeader(("paypal-cert-url")));
+        payload.setTransmission_id(request.getHeader(("paypal-transmission-id")));
+        payload.setTransmission_sig(request.getHeader(("paypal-transmission-sig")));
+        payload.setTransmission_time(ZonedDateTime.parse(request.getHeader(("paypal-transmission-time"))).toLocalDateTime());
         payload.setWebhook_id(this.webhookID);
         payload.setWebhook_event(body);
 
