@@ -26,9 +26,9 @@ public class StripeController extends StripeContext {
     private StripeCustomerPortal stripeCustomerPortal;
 
     @PostMapping("/checkout")
-    public ResponseEntity createCheckout(@RequestParam(required = false) String stripe_customer_id){
+    public ResponseEntity createCheckout(@RequestParam String email){
         try{
-            return ResponseEntity.ok().body(stripeCheckout.createCheckoutSession(stripe_customer_id));
+            return ResponseEntity.ok().body(stripeCheckout.createCheckoutSession(email));
         }catch (Exception e){
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }

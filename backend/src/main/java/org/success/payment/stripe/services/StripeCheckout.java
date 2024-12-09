@@ -13,7 +13,7 @@ import org.success.payment.stripe.StripeContext;
 @Service
 public class StripeCheckout extends StripeContext {
 
-    public CheckoutRedirect createCheckoutSession(String stripeCustomerId) throws StripeException {//returns checkout URL
+    public CheckoutRedirect createCheckoutSession(String email) throws StripeException {//returns checkout URL
         PriceListParams priceParams =
                 PriceListParams.builder().addLookupKey(this.lookupKey).build();
         PriceCollection prices = Price.list(priceParams);
@@ -22,7 +22,7 @@ public class StripeCheckout extends StripeContext {
                 .addLineItem(
                         SessionCreateParams.LineItem.builder().setPrice(prices.getData().get(0).getId()).setQuantity(1L).build())
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                .setCustomer(stripeCustomerId)
+                .setCustomer(email)
                 .setSuccessUrl(frontendUrl + "/success_checkout")
                 .setCancelUrl(frontendUrl + "/canceled_checkout")
                 .build();

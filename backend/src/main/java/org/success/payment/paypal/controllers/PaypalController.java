@@ -38,7 +38,7 @@ public class PaypalController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity checkout(@RequestParam(required = false) String email){//se for subscription activated o email que vai chegar aqui é o do checkout
+    public ResponseEntity checkout(@RequestParam String email){//se for subscription activated o email que vai chegar aqui é o do checkout
         try{
             return ResponseEntity.ok().body(paypalCheckout.createCheckout(email));
         }catch (Exception e){
