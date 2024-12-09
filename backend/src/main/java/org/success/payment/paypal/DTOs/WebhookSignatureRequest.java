@@ -12,5 +12,5 @@ public class WebhookSignatureRequest {
     private String transmission_sig;
     private LocalDateTime transmission_time;
     private String webhook_id;
-    private Object webhook_event;
+    private IncomingWebhook webhook_event;
 }

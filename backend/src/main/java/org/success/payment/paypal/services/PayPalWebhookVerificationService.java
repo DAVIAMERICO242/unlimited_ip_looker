@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.success.payment.paypal.DTOs.IncomingWebhook;
 import org.success.payment.paypal.DTOs.WebhookSignatureRequest;
 import org.success.payment.paypal.DTOs.WebhookSignatureResponse;
 import org.success.payment.paypal.PaypalContext;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Service
 public class PayPalWebhookVerificationService extends PaypalContext {
 
-    public Boolean isVerifiedWebhook(Map<String, String> headers, Object body) {
+    public Boolean isVerifiedWebhook(Map<String, String> headers, IncomingWebhook body) {
         String verifyUrl = this.URL + "/v1/notifications/verify-webhook-signature";
         WebhookSignatureRequest payload = new WebhookSignatureRequest();
         payload.setAuth_algo(headers.get("paypal-auth-algo"));
