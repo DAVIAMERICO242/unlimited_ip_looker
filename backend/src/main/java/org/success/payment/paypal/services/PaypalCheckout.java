@@ -18,6 +18,7 @@ public class PaypalCheckout extends PaypalContext {
     public CheckoutRedirect createCheckout(String email){
         CreateSubscriptionRequest payload = new CreateSubscriptionRequest();
         payload.setPlan_id(this.recurringPlanID);
+        payload.setCustom_id(email);
         CreateSubscriptionRequest.CallbackURLS urls = new CreateSubscriptionRequest.CallbackURLS();
         urls.setReturn_url(this.frontendUrl + "/success_checkout");
         urls.setCancel_url(this.frontendUrl + "/canceled_checkout");
