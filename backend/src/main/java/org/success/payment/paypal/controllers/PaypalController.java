@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.success.payment.paypal.DTOs.IncomingWebhook;
 import org.success.payment.paypal.services.PaypalCheckout;
 import org.success.payment.paypal.services.PaypalWebhookVerificationService;
@@ -41,9 +38,9 @@ public class PaypalController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity checkout(){//se for subscription activated o email que vai chegar aqui é o do checkout
+    public ResponseEntity checkout(@RequestParam String email){//se for subscription activated o email que vai chegar aqui é o do checkout
         try{
-            return ResponseEntity.ok().body(paypalCheckout.createCheckout());
+            return ResponseEntity.ok().body(paypalCheckout.createCheckout(email));
         }catch (Exception e){
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }

@@ -7,7 +7,6 @@ import com.stripe.net.Webhook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.success.payment.processor.SubscriptionProcessor;
 import org.success.payment.stripe.StripeContext;
 
 @Service

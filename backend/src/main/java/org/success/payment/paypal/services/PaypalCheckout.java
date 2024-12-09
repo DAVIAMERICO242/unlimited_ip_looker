@@ -15,7 +15,7 @@ import java.util.Objects;
 @Service
 public class PaypalCheckout extends PaypalContext {
 
-    public CheckoutRedirect createCheckout(){
+    public CheckoutRedirect createCheckout(String email){
         CreateSubscriptionRequest payload = new CreateSubscriptionRequest();
         payload.setPlan_id(this.recurringPlanID);
         CreateSubscriptionRequest.CallbackURLS urls = new CreateSubscriptionRequest.CallbackURLS();
