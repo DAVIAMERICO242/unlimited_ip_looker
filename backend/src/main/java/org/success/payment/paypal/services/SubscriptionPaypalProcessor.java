@@ -17,30 +17,30 @@ public class SubscriptionPaypalProcessor extends SubscriptionContext {
 
 
     @Transactional
-    public void processAfterCheckout(String paypalCustomerId, String name, String email){//se esse email é diferente do login, o usuario tera outra conta
+    public void processAfterCheckout(String custom_id,String paypalCustomerId, String name){//se esse email é diferente do login, o usuario tera outra conta
         if(paypalCustomerId==null){
             System.out.println();
             throw new RuntimeException("PAYPAL PAYER ID NULL");
         }
         try{
-            if(!userService.doesThisUsernameExist(email)){//ativar plano primeira vez
-                this.activePlanFirstTime(paypalCustomerId,name,email);
+            if(!userService.doesThisUsernameExist(custom_id)){//ativar plano primeira vez
+                this.activePlanFirstTime(paypalCustomerId,name,custom_id);
             }
             else{
-                this.reactivePlan(email, paypalCustomerId);
+                this.reactivePlan(custom_id, paypalCustomerId);
             }
         }catch (Exception e){
             System.out.println("ERRO AO SALVAR CUSTOMER STRIPE");
         }
     }
 
-    private void activePlanFirstTime(String paypalCustomerId,String name,String email){
-        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(email);
+    private void activePlanFirstTime(String paypalCustomerId,String name,String custom_id){
+        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(custom_id);
 
         Customer customer = new Customer();
         customer.setUser(output.createdUser());
         customer.setName(name);
-        customer.setEmail(email);
+        customer.setEmail(custom_id);
         customer.setToken(ipLookerKeyService.generateRandomKey());
         customer.setTokenActive(true);
         customer.setLastPayment(LocalDateTime.now());
@@ -52,8 +52,8 @@ public class SubscriptionPaypalProcessor extends SubscriptionContext {
         paypalCustomerRepository.save(paypalCustomer);
     }
 
-    private void reactivePlan(String email,String paypalCustomerId) throws Exception {
-        Optional<Customer> customerOPT = customerRepository.findByEmail(email);
+    private void reactivePlan(String custom_id,String paypalCustomerId) throws Exception {
+        Optional<Customer> customerOPT = customerRepository.findByEmail(custom_id);
         if(customerOPT.isEmpty()){
             throw new Exception("User with such e-mail exists but customer does not");
         }

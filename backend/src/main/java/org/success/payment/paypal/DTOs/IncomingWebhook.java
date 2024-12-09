@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class IncomingWebhook {
     private String id;
+    private String custom_id;
     private String event_version;
     private LocalDateTime create_time;
     private String resource_type;
