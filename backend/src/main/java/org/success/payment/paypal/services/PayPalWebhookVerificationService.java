@@ -4,48 +4,45 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.success.payment.paypal.DTOs.WebhookSignatureRequest;
+import org.success.payment.paypal.DTOs.WebhookSignatureResponse;
+import org.success.payment.paypal.PaypalContext;
+import org.success.payment.paypal.enums.WebhookVerificationStatus;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.Map;
 
 @Service
-public class PayPalWebhookVerificationService {
+public class PayPalWebhookVerificationService extends PaypalContext {
 
-    @Value("${paypal.api.url}")
-    private String paypalApiUrl;
-
-    @Value("${paypal.access.token}")
-    private String accessToken;
-
-    @Value("${paypal.webhook.id}")
-    private String webhookId;
-
-    public boolean verifyWebhook(Map<String, String> headers, Map<String, Object> body) {
-        String verifyUrl = paypalApiUrl + "/v1/notifications/verify-webhook-signature";
-
-        // Prepare the data to verify the signature
-        Map<String, Object> payload = Map.of(
-                "auth_algo", headers.get("paypal-auth-algo"),
-                "cert_url", headers.get("paypal-cert-url"),
-                "transmission_id", headers.get("paypal-transmission-id"),
-                "transmission_sig", headers.get("paypal-transmission-sig"),
-                "transmission_time", headers.get("paypal-transmission-time"),
-                "webhook_id", webhookId,
-                "webhook_event", body
-        );
+    public Boolean isVerifiedWebhook(Map<String, String> headers, Object body) {
+        String verifyUrl = this.URL + "/v1/notifications/verify-webhook-signature";
+        WebhookSignatureRequest payload = new WebhookSignatureRequest();
+        payload.setAuth_algo(headers.get("paypal-auth-algo"));
+        payload.setCert_url(headers.get("paypal-cert-url"));
+        payload.setTransmission_id(headers.get("paypal-transmission-id"));
+        payload.setTransmission_sig(headers.get("paypal-transmission-sig"));
+        payload.setTransmission_time(ZonedDateTime.parse(headers.get("paypal-transmission-time")).toLocalDateTime());
+        payload.setWebhook_id(this.webhookID);
+        payload.setWebhook_event(body);
 
         // Set up HTTP headers
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "Bearer " + accessToken);
+        String basicAuth = Base64.getEncoder().encodeToString((this.clientID + ":" + this.secretKey).getBytes());
+        httpHeaders.set("Authorization", "Basic " + basicAuth);
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         // Create the HTTP entity
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, httpHeaders);
+        HttpEntity request = new HttpEntity<>(payload, httpHeaders);
 
         // Call PayPal's verification endpoint
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<Map> response = restTemplate.exchange(verifyUrl, HttpMethod.POST, request, Map.class);
-            String status = (String) response.getBody().get("verification_status");
-            return "SUCCESS".equals(status);  // Return true if verification succeeded
+            ResponseEntity<WebhookSignatureResponse> response = restTemplate.exchange(verifyUrl, HttpMethod.POST, request, WebhookSignatureResponse.class);
+            WebhookVerificationStatus status = response.getBody().getVerification_status();
+            return status.equals(WebhookVerificationStatus.SUCCESS);  // Return true if verification succeeded
         } catch (Exception e) {
             e.printStackTrace();
             return false;  // Return false if any error occurs
