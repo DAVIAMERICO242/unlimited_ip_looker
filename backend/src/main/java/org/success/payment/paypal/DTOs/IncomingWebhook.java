@@ -14,4 +14,21 @@ public class IncomingWebhook {
     private String event_type;
     private String summary;
     private Object resource;
+
+    @Data
+    public static class SubscriptionResource{
+        private Subscriber subscriber;
+
+        @Data
+        public static class Subscriber{
+            private String payer_id;
+            private Name name;
+            private String email_address;
+            @Data
+            public static class Name{
+                private String given_name;
+                private String surname;
+            }
+        }
+    }
 }

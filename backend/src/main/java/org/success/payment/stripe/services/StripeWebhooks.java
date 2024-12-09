@@ -32,10 +32,10 @@ public class StripeWebhooks extends StripeContext {
                 );
                 System.out.println(checkout);
             }
-            if(event.getType().equals("charge.succeeded")){//cobrança realizada com sucesso, implementar key ativa aqui, mas não enviar email
-                Charge charge = (Charge) object;
-                System.out.println(charge);
-            }
+//            if(event.getType().equals("charge.succeeded")){//cobrança realizada com sucesso, implementar key ativa aqui, mas não enviar email
+//                Charge charge = (Charge) object;
+//                System.out.println(charge);
+//            }
             if(event.getType().equals("charge.failed")){//cobrança falhou
                 Charge charge = (Charge) object;
                 System.out.println(charge);
