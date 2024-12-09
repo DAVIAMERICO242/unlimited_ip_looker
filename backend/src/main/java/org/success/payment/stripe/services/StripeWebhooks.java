@@ -26,7 +26,6 @@ public class StripeWebhooks extends StripeContext {
                 subscriptionStripeProcessor.processAfterCheckout(
                         checkout.getCustomer(),
                         checkout.getCustomerDetails().getName(),
-                        checkout.getCustomerDetails().getEmail(),
                         checkout.getCustomerDetails().getPhone()
                 );
                 System.out.println(checkout);

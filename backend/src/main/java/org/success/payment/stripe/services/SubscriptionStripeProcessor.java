@@ -14,11 +14,11 @@ import java.util.Optional;
 public class SubscriptionStripeProcessor extends SubscriptionContext {
 
     @Transactional
-    public void processAfterCheckout(String stripeCustomerId,String name,String email,String phone){//como eu posso gerar o checkout a partir do stripe customerId nao é um problema
+    public void processAfterCheckout(String stripeCustomerId,String name,String phone){//como eu posso gerar o checkout a partir do stripe customerId nao é um problema
         try{
             Optional<Customer> customerOPT = customerRepository.findByStripeId(stripeCustomerId);
             if(customerOPT.isEmpty()){//ativar plano primeira vez
-                this.activePlanFirstTime(stripeCustomerId,name,email,phone);
+                this.activePlanFirstTime(stripeCustomerId,name,phone);
             }else{
                 this.reactivePlan(customerOPT.get());
             }
@@ -27,12 +27,12 @@ public class SubscriptionStripeProcessor extends SubscriptionContext {
         }
     }
 
-    private void activePlanFirstTime(String stripeCustomerId,String name,String email,String phone){
-        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(email);
+    private void activePlanFirstTime(String stripeCustomerId,String name,String phone){
+        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(stripeCustomerId);
         Customer customer = new Customer();
         customer.setUser(output.createdUser());
         customer.setName(name);
-        customer.setEmail(email);
+        customer.setEmail(stripeCustomerId);
         customer.setPhone(phone);
         customer.setToken(ipLookerKeyService.generateRandomKey());
         customer.setTokenActive(true);
