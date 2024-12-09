@@ -10,7 +10,18 @@ public class PaypalWebhooks extends PaypalContext {
 
     @Async
     public void processWebhook(IncomingWebhook payload){
-        System.out.println(payload);
+        if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.ACTIVATED")){//a subscription foi ativa por checkout bem sucedido
+
+        }
+        else if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.CANCELLED")){//a subscription foi cancelada seja por falha sucessiva no pagamento ou o cliente quis, ELA NAO É DELETADA
+
+        }
+        else if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.PAYMENT.FAILED")){//pagamento falhou
+
+        }
+        else if(payload.getEvent_type().equals("PAYMENT.SALE.COMPLETED")){//cobrança bem sucedida em cima da subscription
+
+        }
     }
 
 
