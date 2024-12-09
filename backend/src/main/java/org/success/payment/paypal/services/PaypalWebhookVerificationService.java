@@ -37,12 +37,12 @@ public class PaypalWebhookVerificationService extends PaypalContext {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         // Create the HTTP entity
-        HttpEntity request = new HttpEntity<>(payload, httpHeaders);
+        HttpEntity httpEntity = new HttpEntity<>(payload, httpHeaders);
 
         // Call PayPal's verification endpoint
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<WebhookSignatureResponse> response = restTemplate.exchange(verifyUrl, HttpMethod.POST, request, WebhookSignatureResponse.class);
+            ResponseEntity<WebhookSignatureResponse> response = restTemplate.exchange(verifyUrl, HttpMethod.POST, httpEntity, WebhookSignatureResponse.class);
             WebhookVerificationStatus status = response.getBody().getVerification_status();
             return status.equals(WebhookVerificationStatus.SUCCESS);  // Return true if verification succeeded
         } catch (Exception e) {
