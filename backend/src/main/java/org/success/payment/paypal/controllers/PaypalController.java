@@ -25,8 +25,8 @@ public class PaypalController {
     @PostMapping("/webhook")
     public ResponseEntity webhook(@RequestBody IncomingWebhook payload, HttpServletRequest request){//se for subscription activated o email que vai chegar aqui é o do checkout
         try{
-            System.out.println("payload");
             if(paypalWebhookVerificationService.isVerifiedWebhook(request,payload)){
+                paypalWebhooks.processWebhook(payload);
                 return ResponseEntity.ok().build();
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
