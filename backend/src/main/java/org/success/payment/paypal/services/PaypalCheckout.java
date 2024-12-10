@@ -31,7 +31,8 @@ public class PaypalCheckout extends PaypalContext {
         HttpEntity httpEntity = new HttpEntity<>(payload,this.authorizedHeaders);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<CreateSubscriptionResponse> response = restTemplate.exchange(this.URL + "/v1/billing/subscriptions",
-                HttpMethod.POST,httpEntity,
+                HttpMethod.POST,
+                httpEntity,
                 CreateSubscriptionResponse.class);
         String redirectURL = response.getBody().getLinks().get(0).getHref();
         return new CheckoutRedirect(redirectURL);

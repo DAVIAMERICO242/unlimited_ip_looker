@@ -58,7 +58,7 @@ public abstract class PaypalContext {
             this.productID = this.prodProductID;
             this.recurringPlanID = this.prodRecurringPlanID;
             this.webhookID = this.prodWebhookID;
-            String basicAuth = Base64.getEncoder().encodeToString((this.devClientID + ":" + this.devSecretKey).getBytes());
+            String basicAuth = Base64.getEncoder().encodeToString((this.prodClientID + ":" + this.prodSecretKey).getBytes());
             authorizedHeaders.set("Authorization", "Basic " + basicAuth);
             authorizedHeaders.setContentType(MediaType.APPLICATION_JSON);
         }else{
@@ -68,7 +68,7 @@ public abstract class PaypalContext {
             this.productID = this.devProductID;
             this.recurringPlanID = this.devRecurringPlanID;
             this.webhookID = this.devWebhookID;
-            String basicAuth = Base64.getEncoder().encodeToString((this.prodClientID + ":" + this.prodSecretKey).getBytes());
+            String basicAuth = Base64.getEncoder().encodeToString((this.devClientID + ":" + this.devSecretKey).getBytes());
             authorizedHeaders.set("Authorization", "Basic " + basicAuth);
             authorizedHeaders.setContentType(MediaType.APPLICATION_JSON);
         }
