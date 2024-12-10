@@ -1,5 +1,6 @@
 package org.success.payment.paypal.DTOs;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ public class WebhookSignatureRequest {
     private String cert_url;
     private String transmission_id;
     private String transmission_sig;
-    private LocalDateTime transmission_time;
+    private String transmission_time;
     private String webhook_id;
-    private IncomingWebhook webhook_event;
+    private Object webhook_event;
 }

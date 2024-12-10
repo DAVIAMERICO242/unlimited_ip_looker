@@ -19,17 +19,21 @@ import java.util.Map;
 @Service
 public class PaypalWebhookVerificationService extends PaypalContext {
 
-    public Boolean isVerifiedWebhook(HttpServletRequest request, IncomingWebhook body) {
+    public Boolean isVerifiedWebhook(HttpServletRequest request, Object body) {
         String verifyUrl = this.URL + "/v1/notifications/verify-webhook-signature";
         WebhookSignatureRequest payload = new WebhookSignatureRequest();
-        payload.setAuth_algo(request.getHeader("paypal-auth-algo"));
-        payload.setCert_url(request.getHeader(("paypal-cert-url")));
-        payload.setTransmission_id(request.getHeader(("paypal-transmission-id")));
-        payload.setTransmission_sig(request.getHeader(("paypal-transmission-sig")));
-        payload.setTransmission_time(ZonedDateTime.parse(request.getHeader(("paypal-transmission-time"))).toLocalDateTime());
+        String paypalAuthAlgo = request.getHeader("paypal-auth-algo");
+        String paypalCertUrl = request.getHeader(("paypal-cert-url"));
+        String paypalTransmissionId = request.getHeader(("paypal-transmission-id"));
+        String paypalTransmissionSig = request.getHeader(("paypal-transmission-sig"));
+        String transmissionTimeString = request.getHeader(("paypal-transmission-time"));
+        payload.setAuth_algo(paypalAuthAlgo);
+        payload.setCert_url(paypalCertUrl);
+        payload.setTransmission_id(paypalTransmissionId);
+        payload.setTransmission_sig(paypalTransmissionSig);
+        payload.setTransmission_time(transmissionTimeString);
         payload.setWebhook_id(this.webhookID);
         payload.setWebhook_event(body);
-
         // Create the HTTP entity
         HttpEntity httpEntity = new HttpEntity<>(payload, this.authorizedHeaders);
 

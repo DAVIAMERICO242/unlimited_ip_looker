@@ -1,5 +1,7 @@
 package org.success.payment.paypal.controllers;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,15 @@ public class PaypalController {
     @Autowired
     private PaypalCheckout paypalCheckout;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @PostMapping("/webhook")
-    public ResponseEntity webhook(@RequestBody IncomingWebhook payload, HttpServletRequest request){//se for subscription activated o email que vai chegar aqui é o do checkout
+    public ResponseEntity webhook(@RequestBody Object payload, HttpServletRequest request){//se for subscription activated o email que vai chegar aqui é o do checkout
         try{
             if(paypalWebhookVerificationService.isVerifiedWebhook(request,payload)){
-                paypalWebhooks.processWebhook(payload);
+                IncomingWebhook unserializedWebhook = mapper.convertValue(payload,IncomingWebhook.class);
+                paypalWebhooks.processWebhook(unserializedWebhook);
                 return ResponseEntity.ok().build();
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

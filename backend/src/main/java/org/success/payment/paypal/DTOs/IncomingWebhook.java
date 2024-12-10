@@ -1,5 +1,6 @@
 package org.success.payment.paypal.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;

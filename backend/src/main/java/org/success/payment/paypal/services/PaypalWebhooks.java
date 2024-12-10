@@ -13,6 +13,9 @@ public class PaypalWebhooks extends PaypalContext {
     @Autowired
     private SubscriptionPaypalProcessor subscriptionPaypalProcessor;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Async
     public void processWebhook(IncomingWebhook payload){
         if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.ACTIVATED")){//a subscription foi ativa por checkout bem sucedido ou o usuario ativou o plano
@@ -37,7 +40,6 @@ public class PaypalWebhooks extends PaypalContext {
     }
 
     private IncomingWebhook.SubscriptionResource getSerializedSubscriptionResource(Object generic){
-        ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(generic,IncomingWebhook.SubscriptionResource.class);
     }
 
