@@ -22,5 +22,6 @@ public class PaypalCustomer {
     @EqualsAndHashCode.Exclude
     private Customer systemCustomer = null;
     private LocalDateTime createdAt = LocalDateTime.now();
-
+    @Column(name="webhook_customer_signature")
+    private String webhookCustomerSignature;
 }

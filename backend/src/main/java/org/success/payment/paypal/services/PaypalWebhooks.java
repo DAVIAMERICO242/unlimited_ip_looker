@@ -15,13 +15,14 @@ public class PaypalWebhooks extends PaypalContext {
 
     @Async
     public void processWebhook(IncomingWebhook payload){
-        if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.ACTIVATED")){//a subscription foi ativa por checkout bem sucedido
+        if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.ACTIVATED")){//a subscription foi ativa por checkout bem sucedido ou o usuario ativou o plano
             Object subscriptionDataUnserialized = payload.getResource();
             IncomingWebhook.SubscriptionResource subscriptionData = getSerializedSubscriptionResource(subscriptionDataUnserialized);
             this.subscriptionPaypalProcessor.processAfterCheckout(
                     subscriptionData.getCustom_id(),
                     subscriptionData.getSubscriber().getPayer_id(),
-                    subscriptionData.getSubscriber().getName().getGiven_name() + " " + subscriptionData.getSubscriber().getName().getSurname()
+                    subscriptionData.getSubscriber().getName().getGiven_name() + " " + subscriptionData.getSubscriber().getName().getSurname(),
+                    subscriptionData.getSubscriber().getEmail_address()
             );
         }
         else if(payload.getEvent_type().equals("BILLING.SUBSCRIPTION.CANCELLED")){//a subscription foi cancelada seja por falha sucessiva no pagamento ou o cliente quis

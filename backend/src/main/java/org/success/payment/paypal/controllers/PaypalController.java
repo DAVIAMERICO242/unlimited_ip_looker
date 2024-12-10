@@ -38,9 +38,9 @@ public class PaypalController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity checkout(@RequestParam String email){//se for subscription activated o email que vai chegar aqui é o do checkout
+    public ResponseEntity checkout(@RequestParam(required = false) String webhookCustomerSignature){//se for subscription activated o email que vai chegar aqui é o do checkout
         try{
-            return ResponseEntity.ok().body(paypalCheckout.createCheckout(email));
+            return ResponseEntity.ok().body(paypalCheckout.createCheckout(webhookCustomerSignature));
         }catch (Exception e){
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }

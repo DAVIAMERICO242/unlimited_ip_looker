@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import java.security.SecureRandom;
 import java.util.Base64;
 
 public abstract class PaypalContext {
@@ -13,7 +14,7 @@ public abstract class PaypalContext {
 
     @Value("${app.frontend-url}")
     protected String frontendUrl;
-    protected HttpHeaders authorizedHeaders;
+    protected HttpHeaders authorizedHeaders = new HttpHeaders();
 
     protected String URL;
     protected String clientID;

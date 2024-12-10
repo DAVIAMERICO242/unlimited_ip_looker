@@ -1,6 +1,8 @@
 package org.success.payment.paypal.services;
 
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.success.customer.entities.Customer;
 import org.success.payment.SubscriptionContext;
@@ -17,53 +19,50 @@ public class SubscriptionPaypalProcessor extends SubscriptionContext {
 
 
     @Transactional
-    public void processAfterCheckout(String custom_id,String paypalCustomerId, String name){//se esse email é diferente do login, o usuario tera outra conta
-        if(paypalCustomerId==null){
-            System.out.println();
-            throw new RuntimeException("PAYPAL PAYER ID NULL");
-        }
+    public void processAfterCheckout(String webhookCustomerSignature,
+                                     String paypalCustomerId,
+                                     String name,
+                                     String email
+                                     ){//se esse email é diferente do login, o usuario tera outra conta
+
+        Optional<PaypalCustomer> paypalCustomerOPT = paypalCustomerRepository.findByWebhookCustomerSignature(webhookCustomerSignature);
         try{
-            if(!userService.doesThisUsernameExist(custom_id)){//ativar plano primeira vez
-                this.activePlanFirstTime(paypalCustomerId,name,custom_id);
+            if(paypalCustomerOPT.isEmpty()){//ativar plano primeira vez
+                this.activePlanFirstTime(webhookCustomerSignature,paypalCustomerId,name,email);
             }
             else{
-                this.reactivePlan(custom_id, paypalCustomerId);
+                this.reactivePlan(paypalCustomerOPT.get(), paypalCustomerId);
             }
         }catch (Exception e){
             System.out.println("ERRO AO SALVAR CUSTOMER STRIPE");
         }
     }
 
-    private void activePlanFirstTime(String paypalCustomerId,String name,String custom_id){
-        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(custom_id);
+    private void activePlanFirstTime(String webhookCustomerSignature, String paypalCustomerId,String name,String email){
+        CreatedUserWithRandomPass output = userService.createUserWithRandomPass(email);
 
         Customer customer = new Customer();
         customer.setUser(output.createdUser());
         customer.setName(name);
-        customer.setEmail(custom_id);
+        customer.setEmail(email);
         customer.setToken(ipLookerKeyService.generateRandomKey());
         customer.setTokenActive(true);
         customer.setLastPayment(LocalDateTime.now());
-
         Customer savedCustomer = customerRepository.save(customer);
+
         PaypalCustomer paypalCustomer = new PaypalCustomer();
+        paypalCustomer.setWebhookCustomerSignature(webhookCustomerSignature);
         paypalCustomer.setPaypalId(paypalCustomerId);
         paypalCustomer.setSystemCustomer(savedCustomer);
         paypalCustomerRepository.save(paypalCustomer);
     }
 
-    private void reactivePlan(String custom_id,String paypalCustomerId) throws Exception {
-        Optional<Customer> customerOPT = customerRepository.findByEmail(custom_id);
-        if(customerOPT.isEmpty()){
-            throw new Exception("User with such e-mail exists but customer does not");
-        }
-        Customer customer = customerOPT.get();
-        if(!paypalCustomerId.equals(customer.getPaypalCustomer().getPaypalId())){//problematico,
-            PaypalCustomer paypalCustomer = customer.getPaypalCustomer();
+    private void reactivePlan(PaypalCustomer paypalCustomer,String paypalCustomerId) throws Exception {
+        if(!paypalCustomerId.equals(paypalCustomer.getPaypalId())){//comprou com outra conta do paypal
             paypalCustomer.setPaypalId(paypalCustomerId);
-            customer.setPaypalCustomer(paypalCustomer);
-            customerRepository.save(customer);
+            paypalCustomer = paypalCustomerRepository.save(paypalCustomer);
         }
+        Customer customer = paypalCustomer.getSystemCustomer();
         customer.setTokenActive(true);
         customer.setLastPayment(LocalDateTime.now());
         Customer savedCustomer = customerRepository.save(customer);
